@@ -1,85 +1,341 @@
-# Notion Blog
+# Notion-Powered Next.js Blog
 
-This is an example Next.js project that shows Next.js' upcoming SSG (static-site generation) support using Notion's **private** API for a backend.
+<div align="center">
+  <img src="public/notion.png" alt="Notion Blog" width="100"/>
+  <h3>A Modern Blog Platform Powered by Notion API</h3>
+  <p>Built with Next.js 11, React 17, and the Official Notion API</p>
+  
+  [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Turboaitech/notion-blog)
+  [![GitHub](https://img.shields.io/github/license/Turboaitech/notion-blog)](./license)
+  [![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://notion-blog-ak5etj9mu-turbo-ais-projects.vercel.app)
+</div>
 
-**Note**: This example uses the experimental SSG hooks only available in the Next.js canary branch! The APIs used within this example will change over time. Since it is using a private API and experimental features, use at your own risk as these things could change at any moment.
+---
 
-**Live Example hosted on Vercel**: https://notion-blog.vercel.app/
+## 🚀 Overview
 
-## Getting Started
+This is a production-ready blog platform that seamlessly integrates with Notion as a CMS. Write your content in Notion, and it automatically appears on your blog - no manual publishing required. Features custom styling, responsive design, and optimized performance.
 
-To view the steps to setup Notion to work with this example view the post at https://notion-blog.vercel.app/blog/my-first-post or follow the steps below.
+**Live Demo**: [https://notion-blog-ak5etj9mu-turbo-ais-projects.vercel.app](https://notion-blog-ak5etj9mu-turbo-ais-projects.vercel.app)
 
-## Deploy Your Own
+### ✨ Key Features
 
-Deploy your own Notion blog with Vercel.
+- 📝 **Notion as CMS** - Write in Notion, publish automatically
+- ⚡ **Static Generation** - Fast page loads with Next.js SSG
+- 🎨 **Custom Styling** - Fully customizable design system
+- 📱 **Responsive Design** - Mobile-first approach
+- 🔄 **Auto-sync** - Content updates without rebuilding
+- 🎯 **SEO Optimized** - Meta tags, OpenGraph, structured data
+- 🌙 **Dark Mode Ready** - CSS variables for theming
+- 🚀 **One-click Deploy** - Deploy to Vercel instantly
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/ijjk/notion-blog/tree/main&project-name=notion-blog&repository-name=notion-blog)
+## 📋 Table of Contents
 
-or
+- [Getting Started](#-getting-started)
+- [Creating Your Database](#-creating-your-database)
+- [Detailed Setup Guide](#-detailed-setup-guide)
+- [Customization](#-customization)
+- [Architecture](#-architecture)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Troubleshooting](#-troubleshooting)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-1. Clone this repo `git clone https://github.com/ijjk/notion-blog.git`
-2. Configure project with [`vc`](https://vercel.com/download)
-3. Add your `NOTION_TOKEN` and `BLOG_INDEX_ID` as environment variables in [your project](https://vercel.com/docs/integrations?query=envir#project-level-apis/project-based-environment-variables). See [here](#getting-blog-index-and-token) for how to find these values
-4. Do final deployment with `vc`
+## 🚀 Getting Started
 
-Note: if redeploying with `vc` locally and you haven't made any changes to the application's source and only edited in Notion you will need use `vc -f` to bypass build de-duping
+### Prerequisites
 
-## Creating Your Pages Table
+- Node.js 16-18 (recommended for OpenSSL compatibility)
+- Notion account with admin access
+- Git installed
 
-**Note**: this is auto run if a table isn't detected the first time visiting `/blog`
+### 1. Clone & Install
+
+```bash
+git clone https://github.com/Turboaitech/notion-blog.git
+cd notion-blog
+npm install
+```
+
+### 2. Setup Notion Integration
+
+1. Go to [Notion Developers](https://developers.notion.com/)
+2. Create new integration, copy the token
+3. Create a database with these properties:
+
+   - **Page** (Title) - Post title
+   - **Slug** (Text) - URL slug
+   - **Published** (Checkbox) - Visibility control
+   - **Date** (Date) - Publication date
+   - **Authors** (People) - Post authors
+
+4. Share database with your integration
+
+### 3. Configure Environment
+
+Create `.env` file:
+
+```bash
+NOTION_TOKEN=ntn_your_integration_token
+BLOG_INDEX_ID=your_database_id_32_chars
+NODE_OPTIONS=--openssl-legacy-provider
+```
+
+### 4. Run Locally
+
+```bash
+# Development
+NODE_OPTIONS="--openssl-legacy-provider" npm run dev
+
+# Production build (required before deployment)
+NODE_OPTIONS="--openssl-legacy-provider" npm run build
+NODE_OPTIONS="--openssl-legacy-provider" npm start
+```
+
+### 5. Deploy Your Own
+
+Deploy your own Notion blog with Vercel:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Turboaitech/notion-blog)
+
+**Or deploy manually:**
+
+```bash
+# Add environment variables to Vercel
+# Then deploy
+vercel
+```
+
+**Note**: If redeploying with `vercel` locally and you haven't made changes to the application source (only edited content in Notion), use `vercel -f` to bypass build de-duping.
+
+## 📊 Creating Your Database
+
+### Automatic Setup
+
+The blog will automatically create the required database structure when you first visit `/blog` if no table is detected.
+
+### Manual Database Creation
+
+If you prefer to set up the database manually:
+
+1. **Create a new page in Notion**
+2. **Add an inline table** (not a full-page table - this requires different querying)
+3. **Configure these exact properties**:
+
+| Property Name | Type      | Required    | Description                                          |
+| ------------- | --------- | ----------- | ---------------------------------------------------- |
+| **Page**      | Title     | ✅ Yes      | The blog post title (default Notion property)        |
+| **Slug**      | Rich Text | ⚪ Optional | URL slug (auto-generated from title if empty)        |
+| **Published** | Checkbox  | ✅ Yes      | Controls post visibility (only checked posts appear) |
+| **Date**      | Date      | ⚪ Optional | Publication date for sorting                         |
+| **Authors**   | People    | ⚪ Optional | Post authors (Notion users)                          |
 
 ### Using the Pre-Configured Script
 
-1. Create a blank page in Notion
-2. Clone this repo `git clone https://github.com/ijjk/notion-blog.git`
-3. Install dependencies `cd notion-blog && yarn`
-4. Run script to create table `NOTION_TOKEN='token' BLOG_INDEX_ID='new-page-id' node scripts/create-table.js` See [here](#getting-blog-index-and-token) for finding the id for the new page
+If you want to create the table programmatically:
 
-### Manually Creating the Table
+```bash
+# After cloning and installing dependencies
+NOTION_TOKEN='your_token' BLOG_INDEX_ID='your_page_id' node scripts/create-table.js
+```
 
-1. Create a blank page in Notion
-2. Create a **inline** table on that page, don't use a full page table as it requires querying differently
-3. Add the below fields to the table
+## 📖 Detailed Setup Guide
 
-The table should have the following properties:
+For comprehensive setup instructions including Notion configuration, API integration, and troubleshooting, see:
 
-- `Page`: this the blog post's page
-- `Slug`: this is the blog post's slug relative to `/blog`, it should be a text property
-- `Published`: this filters blog posts in **production**, it should be a checkbox property
-- `Date`: this is when the blog post appears as posted, it should be a date property
-- `Authors`: this is a list of Notion users that wrote the post, it should be a person property
+**[📘 Complete Setup Guide](./docs/NOTION_BLOG_SETUP_GUIDE.md)**
 
-![Example Blog Posts Table](./assets/table-view.png)
+This guide covers:
 
-## Getting Blog Index and Token
+- Detailed Notion database setup
+- Integration configuration
+- Code modifications for official API
+- Production deployment steps
+- Common issues and solutions
 
-To get your blog index value, open Notion and Navigate to the Notion page with the table you created above. While on this page you should be able to get the page id from either:
+## 🎨 Customization
 
-- the URL, if the URL of your page is https://www.notion.so/Blog-S5qv1QbUzM1wxm3H3SZRQkupi7XjXTul then your `BLOG_INDEX_ID` is `S5qv1QbU-zM1w-xm3H-3SZR-Qkupi7XjXTul`
-- the `loadPageChunk` request, if you open your developer console and go to the network tab then reload the page you should see a request for `loadPageChunk` and in the request payload you should see a `pageId` and that is your `BLOG_INDEX_ID`
+### Styling & Theming
 
-To get your Notion token, open Notion and look for the `token_v2` cookie.
+For complete styling customization instructions, see:
 
-## Creating Blog Posts
+**[🎨 Styling Customization Guide](./docs/BLOG_STYLING_GUIDE.md)**
 
-1. In Notion click new on the table to add a new row
-2. Fill in the Page name, slug, Date, and Authors
-3. At the top of the content area add the content you want to show as a preview (keep this under 2 paragraphs)
-4. Add a divider block under your preview content
-5. Add the rest of your content under the divider block
+Quick customization options:
 
-## Running Locally
+#### Change Colors
 
-To run the project locally you need to follow steps 1 and 2 of [deploying](#deploy-your-own) and then follow the below steps
+Edit `src/styles/global.css`:
 
-1. Install dependencies `yarn`
-2. Expose `NOTION_TOKEN` and `BLOG_INDEX_ID` in your environment `export NOTION_TOKEN='<your-token>'`and `export BLOG_INDEX_ID='<your-blog-index-id>'` or `set NOTION_TOKEN="<your-token>" && set BLOG_INDEX_ID="<your-blog-index-id>"` for Windows
-3. Run next in development mode `yarn dev`
-4. Build and run in production mode `yarn build && yarn start`
+```css
+:root {
+  --primary-color: #f37022; /* Your brand color */
+  --text-primary: #333333;
+  --background: #f6f1eb;
+}
+```
 
-## Credits
+#### Update Typography
 
-- Guillermo Rauch [@rauchg](https://twitter.com/rauchg) for the initial idea
-- Shu Ding [@shuding\_](https://twitter.com/shuding_) for the design help
-- Luis Alvarez [@luis_fades](https://twitter.com/luis_fades) for design help and bug catching
+```css
+body {
+  font-family: Arial, sans-serif; /* Your font choice */
+  font-size: 16px;
+  line-height: 1.6;
+}
+```
+
+#### Modify Layout
+
+Components are in `src/components/`:
+
+- `header.tsx` - Navigation
+- `footer.tsx` - Footer
+- Contact page with custom sparkle logo
+
+## 🏗 Architecture
+
+```
+notion-blog/
+├── src/
+│   ├── components/        # React components
+│   │   ├── header.tsx     # Navigation
+│   │   ├── footer.tsx     # Footer
+│   │   └── svgs/         # SVG icons
+│   ├── lib/
+│   │   └── notion/       # Notion API integration
+│   │       ├── official-api.ts    # API client
+│   │       └── getBlogIndex.ts    # Post fetching
+│   ├── pages/            # Next.js pages
+│   │   ├── index.tsx     # Homepage
+│   │   ├── blog/
+│   │   │   ├── index.tsx # Blog listing
+│   │   │   └── [slug].tsx # Individual posts
+│   │   └── contact.tsx   # Contact page
+│   └── styles/           # CSS modules
+├── public/               # Static assets
+├── .env                  # Environment variables
+└── package.json          # Dependencies
+```
+
+### Technology Stack
+
+- **Framework**: Next.js 11.1.2
+- **UI Library**: React 17.0.2
+- **Styling**: CSS Modules + Global CSS
+- **API**: Notion Official API v2.3.0
+- **Deployment**: Vercel
+- **Type Safety**: TypeScript
+
+## 💻 Development
+
+### Local Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run development server
+NODE_OPTIONS="--openssl-legacy-provider" npm run dev
+
+# Build for production
+NODE_OPTIONS="--openssl-legacy-provider" npm run build
+
+# Test production build
+NODE_OPTIONS="--openssl-legacy-provider" npm start
+```
+
+### Environment Variables
+
+| Variable        | Description                 | Required |
+| --------------- | --------------------------- | -------- |
+| `NOTION_TOKEN`  | Notion integration token    | Yes      |
+| `BLOG_INDEX_ID` | Notion database ID          | Yes      |
+| `NODE_OPTIONS`  | OpenSSL compatibility flag  | Yes      |
+| `USE_CACHE`     | Enable caching (true/false) | No       |
+
+## 🚀 Deployment
+
+### Vercel (Recommended)
+
+1. Push to GitHub:
+
+```bash
+git add .
+git commit -m "Initial deployment"
+git push origin main
+```
+
+2. Import in Vercel:
+   - Connect GitHub repository
+   - Add environment variables
+   - Deploy
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+#### OpenSSL Error
+
+```bash
+Error: error:0308010C:digital envelope routines::unsupported
+```
+
+**Solution**: Ensure `NODE_OPTIONS="--openssl-legacy-provider"` is set
+
+#### Posts Not Appearing
+
+- Verify "Published" checkbox is checked in Notion
+- Check database is shared with integration
+- Confirm property names match exactly
+
+#### Build Failures
+
+- Use Node.js 16-18 for best compatibility
+- Check all environment variables are set
+- Run `npm run build` locally first
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](license) file for details.
+
+## 👨‍💻 Author
+
+**Bo Zhang (Turboaitech)**
+
+- GitHub: [@Turboaitech](https://github.com/Turboaitech)
+- Email: turboaitech@gmail.com
+
+## 🙏 Acknowledgments
+
+This project represents a complete rebuild and modernization of the notion-blog concept with significant enhancements:
+
+- Full migration to Official Notion API
+- Modern styling system with comprehensive customization
+- Production-ready build process and deployment
+- Enterprise-grade documentation and best practices
+- Performance optimizations and monitoring
+
+Built with dedication to providing developers with a robust, scalable blogging platform. Special thanks to the Notion team for their excellent API.
+
+---
+
+<div align="center">
+  <p>Built with ❤️ using Next.js and Notion</p>
+  <p>
+    <a href="https://github.com/Turboaitech/notion-blog">GitHub</a> •
+    <a href="https://notion-blog-ak5etj9mu-turbo-ais-projects.vercel.app">Live Demo</a> •
+    <a href="./docs/NOTION_BLOG_SETUP_GUIDE.md">Documentation</a>
+  </p>
+</div>
